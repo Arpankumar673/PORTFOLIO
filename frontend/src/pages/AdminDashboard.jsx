@@ -184,7 +184,11 @@ const AdminDashboard = () => {
     const handleCertificateSubmit = async (e) => {
         e.preventDefault();
         try {
-            isEditingCert ? await updateCertificates(currentCertId, certificateForm) : await createCertificates(certificateForm);
+            const finalForm = {
+                ...certificateForm,
+                verify_link: certificateForm.verify_link?.trim() || null
+            };
+            isEditingCert ? await updateCertificates(currentCertId, finalForm) : await createCertificates(finalForm);
             setCertificateForm({ title: '', issuer: '', date: '', image_url: '', verify_link: '' });
             setIsEditingCert(false);
             fetchData();
@@ -363,7 +367,7 @@ const AdminDashboard = () => {
                                             <input type="text" placeholder="CERTIFICATE TITLE" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={certificateForm.title} onChange={e => setCertificateForm({...certificateForm, title: e.target.value})} required />
                                             <input type="text" placeholder="ISSUED BY" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={certificateForm.issuer} onChange={e => setCertificateForm({...certificateForm, issuer: e.target.value})} required />
                                             <input type="text" placeholder="DATE (e.g. March 2024)" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-[10px] font-black tracking-widest uppercase text-accent" value={certificateForm.date} onChange={e => setCertificateForm({...certificateForm, date: e.target.value})} required />
-                                            <input type="text" placeholder="VERIFICATION LINK (URL)" className="bg-white/5 border border-white/5 p-5 rounded-2xl text-[10px] outline-none focus:border-accent font-black tracking-widest" value={certificateForm.verify_link} onChange={e => setCertificateForm({...certificateForm, verify_link: e.target.value})} />
+                                            <input type="text" placeholder="VERIFICATION LINK (OPTIONAL)" className="bg-white/5 border border-white/5 p-5 rounded-2xl text-[10px] outline-none focus:border-accent font-black tracking-widest" value={certificateForm.verify_link} onChange={e => setCertificateForm({...certificateForm, verify_link: e.target.value})} />
                                             <label className="col-span-full py-5 bg-white/5 border border-white/10 text-center rounded-2xl text-[10px] font-black uppercase tracking-widest cursor-pointer hover:bg-white/10 transition-all flex items-center justify-center gap-4 relative overflow-hidden">
                                                 <FileText size={20} className="text-accent"/> {certificateForm.image_url ? 'Overwrite Document Visual' : 'Upload Certificate Binary (Image/PDF)'}
                                                 <input type="file" className="hidden" onChange={async (e) => { const url = await uploadCertificateMedia(e.target.files[0]); setCertificateForm({...certificateForm, image_url: url}); }} />
