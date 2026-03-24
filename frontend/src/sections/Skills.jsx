@@ -43,7 +43,7 @@ const Skills = ({ skills = [] }) => {
                             className="skill-item group relative aspect-square glass-premium border-white/5 rounded-3xl md:rounded-[2.5rem] flex flex-col items-center justify-center p-8 transition-all duration-500 hover:scale-110 hover:bg-accent/5 hover:shadow-glow-orange-lg hover:border-accent"
                         >
                             <div className="text-3xl md:text-4xl lg:text-5xl font-black text-accent group-hover:text-white transition-colors mb-4 drop-shadow-md">
-                                {skill.level}%
+                                {skill.percentage}%
                             </div>
                             <h4 className="text-[10px] md:text-xs font-black uppercase tracking-widest text-white/20 group-hover:text-accent transition-all leading-tight text-center px-4">
                                 {skill.name}

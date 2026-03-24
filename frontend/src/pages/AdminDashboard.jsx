@@ -55,7 +55,7 @@ const AdminDashboard = () => {
     const [isEditingService, setIsEditingService] = useState(false);
     const [currentServiceId, setCurrentServiceId] = useState(null);
 
-    const [skillForm, setSkillForm] = useState({ name: '', level: '80', category: 'Frontend' });
+    const [skillForm, setSkillForm] = useState({ name: '', percentage: '80', category: 'Frontend' });
 
     useEffect(() => {
         fetchData();
@@ -109,7 +109,7 @@ const AdminDashboard = () => {
 
     const handleSkillSubmit = async (e) => {
         e.preventDefault();
-        try { await createSkill(skillForm); setSkillForm({ name: '', level: '80', category: 'Frontend' }); fetchData(); } catch (err) { alert(err.message); }
+        try { await createSkill(skillForm); setSkillForm({ name: '', percentage: '80', category: 'Frontend' }); fetchData(); } catch (err) { alert(err.message); }
     };
 
     const handleProfileSync = async (e) => {
@@ -228,8 +228,8 @@ const AdminDashboard = () => {
                                             <input type="text" placeholder="SKILL NAME" className="w-full bg-white/5 border border-white/5 p-5 rounded-2xl focus:border-accent outline-none font-bold text-white uppercase text-xs" value={skillForm.name} onChange={e => setSkillForm({...skillForm, name: e.target.value})} required />
                                         </div>
                                         <div className="space-y-4">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Mastery %: {skillForm.level}</label>
-                                            <input type="range" className="w-full accent-accent" min="0" max="100" value={skillForm.level} onChange={e => setSkillForm({...skillForm, level: e.target.value})} />
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Mastery %: {skillForm.percentage}</label>
+                                            <input type="range" className="w-full accent-accent" min="0" max="100" value={skillForm.percentage} onChange={e => setSkillForm({...skillForm, percentage: e.target.value})} />
                                         </div>
                                         <button type="submit" className="py-5 bg-white text-background font-black uppercase tracking-[0.5em] rounded-2xl hover:bg-accent hover:text-white transition-all text-[10px] shadow-glow-orange-lg">SPLICE SEQUENCE</button>
                                     </form>
@@ -242,9 +242,9 @@ const AdminDashboard = () => {
                                                 <button onClick={async () => { if(window.confirm('Delete gene?')) { await deleteSkill(s.id); fetchData(); } }} className="p-2 text-white/10 hover:text-red-500 transition-colors"><Trash2 size={12} /></button>
                                             </div>
                                             <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                                                <div className="h-full bg-accent shadow-glow-orange transition-all duration-1000" style={{ width: `${s.level}%` }}></div>
+                                                <div className="h-full bg-accent shadow-glow-orange transition-all duration-1000" style={{ width: `${s.percentage}%` }}></div>
                                             </div>
-                                            <span className="text-[9px] font-bold text-white/20 uppercase tracking-widest self-end">{s.level}% Mastered</span>
+                                            <span className="text-[9px] font-bold text-white/20 uppercase tracking-widest self-end">{s.percentage}% Mastered</span>
                                         </div>
                                     ))}
                                 </div>
