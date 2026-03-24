@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
+    getProjects, createProject, updateProject, deleteProject, 
+    getSkills, createSkill, deleteSkill, 
+    getServices, createService, updateService, deleteService,
+    getAbout, updateAbout, getMessages, deleteMessage,
+    getSocialLinks, updateSocialLinks,
     uploadResume, uploadProfileImage, getProfileData, updateProfileData, uploadProjectImage,
     getExperience, createExperience, updateExperience, deleteExperience, uploadCompanyLogo,
     getCertificates, createCertificates, updateCertificates, deleteCertificates, uploadCertificateMedia
@@ -242,6 +247,23 @@ const AdminDashboard = () => {
                         {/* TAB CONTENT: PROJECTS (NODES) */}
                         {activeTab === 'projects' && (
                             <div className="space-y-12">
+                               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    {projects.map(p => (
+                                        <div key={p.id} className="glass-premium p-8 rounded-[2.5rem] border-white/5 flex flex-col gap-6 relative group hover:bg-accent/5 transition-all">
+                                            <div className="aspect-video bg-white/5 rounded-2xl overflow-hidden shadow-2xl">
+                                                {p.image_url ? <img src={p.image_url} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" /> : <div className="w-full h-full flex items-center justify-center text-white/5 font-black uppercase italic text-xs">Buffer Empty</div>}
+                                            </div>
+                                            <div className="flex justify-between items-center gap-4">
+                                                <h4 className="text-lg font-black uppercase tracking-tighter truncate">{p.title}</h4>
+                                                <div className="flex gap-2 flex-shrink-0">
+                                                    <button onClick={() => { setProjectForm(p); setIsEditingProj(true); setCurrentProjId(p.id); }} className="w-10 h-10 bg-white/10 hover:bg-accent hover:text-white rounded-full flex items-center justify-center transition-all"><Edit3 size={16} /></button>
+                                                    <button onClick={async () => { if(window.confirm('Wipe node?')) { await deleteProject(p.id); fetchData(); } }} className="w-10 h-10 bg-red-500/10 text-red-500 hover:bg-red-500 rounded-full flex items-center justify-center transition-all"><Trash2 size={16} /></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {projects.length === 0 && <div className="col-span-full py-20 text-center text-white/5 font-black uppercase tracking-[0.5em] italic">No projects stored.</div>}
+                               </div>
                                <div className="glass-premium p-8 md:p-12 border-white/5 flex flex-col gap-10 rounded-[3rem] shadow-2xl">
                                     <h3 className="text-2xl md:text-3xl font-black italic tracking-tighter uppercase text-white flex items-center gap-4"><Plus className="text-accent" /> {isEditingProj ? 'Reconfigure Node' : 'Initialize Node'}</h3>
                                     <form onSubmit={handleProjectSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-10">
@@ -263,23 +285,8 @@ const AdminDashboard = () => {
                                         <button type="submit" className="col-span-full py-7 bg-white text-background font-black uppercase tracking-[0.5em] rounded-3xl hover:bg-accent hover:text-white transition-all text-xs shadow-glow-orange-lg">
                                             {isEditingProj ? 'CONFIRM MISSION LOGS' : 'INITIALIZE SYSTEM SEQUENCE'}
                                         </button>
+                                        {isEditingProj && <button type="button" onClick={() => { setIsEditingProj(false); setProjectForm({ title: '', description: '', tech_stack: '', live_url: '', github_url: '', image_url: '' }); }} className="col-span-full py-3 text-white/30 uppercase font-black text-[10px] hover:text-white transition-all">Cancel Calibration</button>}
                                     </form>
-                               </div>
-                               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                                    {projects.map(p => (
-                                        <div key={p.id} className="glass-premium p-8 rounded-[2.5rem] border-white/5 flex flex-col gap-6 relative group hover:bg-accent/5 transition-all">
-                                            <div className="aspect-video bg-white/5 rounded-2xl overflow-hidden shadow-2xl">
-                                                {p.image_url ? <img src={p.image_url} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" /> : <div className="w-full h-full flex items-center justify-center text-white/5 font-black uppercase italic text-xs">Buffer Empty</div>}
-                                            </div>
-                                            <div className="flex justify-between items-center gap-4">
-                                                <h4 className="text-lg font-black uppercase tracking-tighter truncate">{p.title}</h4>
-                                                <div className="flex gap-2 flex-shrink-0">
-                                                    <button onClick={() => { setProjectForm(p); setIsEditingProj(true); setCurrentProjId(p.id); }} className="w-10 h-10 bg-white/10 hover:bg-accent hover:text-white rounded-full flex items-center justify-center transition-all"><Edit3 size={16} /></button>
-                                                    <button onClick={async () => { if(window.confirm('Wipe node?')) { await deleteProject(p.id); fetchData(); } }} className="w-10 h-10 bg-red-500/10 text-red-500 hover:bg-red-500 rounded-full flex items-center justify-center transition-all"><Trash2 size={16} /></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
                                </div>
                             </div>
                         )}
@@ -287,24 +294,6 @@ const AdminDashboard = () => {
                         {/* TAB CONTENT: EXPERIENCE (CHRONICLE) */}
                         {activeTab === 'experience' && (
                             <div className="space-y-12">
-                                <div className="glass-premium p-8 md:p-12 border-white/5 rounded-[3rem] shadow-2xl">
-                                    <h3 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-10 flex items-center gap-4"><Briefcase className="text-accent" /> {isEditingExp ? 'Recalibrate Timeline' : 'Initialize Timeline'}</h3>
-                                    <form onSubmit={handleExperienceSubmit} className="space-y-8">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                            <input type="text" placeholder="ROLE TITLE" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={experienceForm.role} onChange={e => setExperienceForm({...experienceForm, role: e.target.value})} required />
-                                            <input type="text" placeholder="COMPANY NAME" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={experienceForm.company} onChange={e => setExperienceForm({...experienceForm, company: e.target.value})} required />
-                                            <input type="text" placeholder="DURATION (e.g. Jan 2024 - Present)" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-[10px] font-black tracking-widest uppercase text-accent" value={experienceForm.duration} onChange={e => setExperienceForm({...experienceForm, duration: e.target.value})} required />
-                                            <label className="py-5 bg-white/5 border border-white/10 text-center rounded-2xl text-[10px] font-black uppercase tracking-widest cursor-pointer hover:bg-white/10 transition-all flex items-center justify-center gap-4 relative overflow-hidden">
-                                                <Camera size={20} className="text-accent"/> {experienceForm.logo_url ? 'Overwrite Logo' : 'Upload Company Logo'}
-                                                <input type="file" className="hidden" onChange={async (e) => { const url = await uploadCompanyLogo(e.target.files[0]); setExperienceForm({...experienceForm, logo_url: url}); }} />
-                                            </label>
-                                        </div>
-                                        <textarea placeholder="EXPERIENCE DESCRIPTION" className="w-full bg-white/5 border border-white/5 p-8 rounded-3xl focus:border-accent outline-none text-base font-bold italic resize-none min-h-[140px]" value={experienceForm.description} onChange={e => setExperienceForm({...experienceForm, description: e.target.value})} required />
-                                        <button type="submit" className="w-full py-7 bg-white text-background font-black uppercase tracking-[0.5em] rounded-3xl hover:bg-accent hover:text-white transition-all text-xs shadow-glow-orange-lg">
-                                            {isEditingExp ? 'CONFIRM TIMELINE UPDATE' : 'DEPLOY TIMELINE NODE'}
-                                        </button>
-                                    </form>
-                                </div>
                                 <div className="space-y-6">
                                     {experience.map(exp => (
                                         <div key={exp.id} className="glass-premium p-8 rounded-[2.5rem] border-white/5 flex flex-col md:flex-row items-center gap-10 hover:bg-accent/[0.03] transition-all">
@@ -322,6 +311,26 @@ const AdminDashboard = () => {
                                             </div>
                                         </div>
                                     ))}
+                                    {experience.length === 0 && <div className="py-20 text-center text-white/5 font-black uppercase tracking-[0.5em] italic">No experiences logged.</div>}
+                                </div>
+                                <div className="glass-premium p-8 md:p-12 border-white/5 rounded-[3rem] shadow-2xl">
+                                    <h3 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-10 flex items-center gap-4"><Briefcase className="text-accent" /> {isEditingExp ? 'Recalibrate Timeline' : 'Initialize Timeline'}</h3>
+                                    <form onSubmit={handleExperienceSubmit} className="space-y-8">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <input type="text" placeholder="ROLE TITLE" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={experienceForm.role} onChange={e => setExperienceForm({...experienceForm, role: e.target.value})} required />
+                                            <input type="text" placeholder="COMPANY NAME" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={experienceForm.company} onChange={e => setExperienceForm({...experienceForm, company: e.target.value})} required />
+                                            <input type="text" placeholder="DURATION (e.g. Jan 2024 - Present)" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-[10px] font-black tracking-widest uppercase text-accent" value={experienceForm.duration} onChange={e => setExperienceForm({...experienceForm, duration: e.target.value})} required />
+                                            <label className="py-5 bg-white/5 border border-white/10 text-center rounded-2xl text-[10px] font-black uppercase tracking-widest cursor-pointer hover:bg-white/10 transition-all flex items-center justify-center gap-4 relative overflow-hidden">
+                                                <Camera size={20} className="text-accent"/> {experienceForm.logo_url ? 'Overwrite Logo' : 'Upload Company Logo'}
+                                                <input type="file" className="hidden" onChange={async (e) => { const url = await uploadCompanyLogo(e.target.files[0]); setExperienceForm({...experienceForm, logo_url: url}); }} />
+                                            </label>
+                                        </div>
+                                        <textarea placeholder="EXPERIENCE DESCRIPTION" className="w-full bg-white/5 border border-white/5 p-8 rounded-3xl focus:border-accent outline-none text-base font-bold italic resize-none min-h-[140px]" value={experienceForm.description} onChange={e => setExperienceForm({...experienceForm, description: e.target.value})} required />
+                                        <button type="submit" className="w-full py-7 bg-white text-background font-black uppercase tracking-[0.5em] rounded-3xl hover:bg-accent hover:text-white transition-all text-xs shadow-glow-orange-lg">
+                                            {isEditingExp ? 'CONFIRM TIMELINE UPDATE' : 'DEPLOY TIMELINE NODE'}
+                                        </button>
+                                        {isEditingExp && <button type="button" onClick={() => { setIsEditingExp(false); setExperienceForm({ role: '', company: '', duration: '', description: '', logo_url: '' }); }} className="w-full py-3 text-white/30 uppercase font-black text-[10px] hover:text-white transition-all">Cancel Calibration</button>}
+                                    </form>
                                 </div>
                             </div>
                         )}
@@ -329,24 +338,6 @@ const AdminDashboard = () => {
                         {/* TAB CONTENT: CERTIFICATES (VERIFY) */}
                         {activeTab === 'certificates' && (
                             <div className="space-y-12">
-                                <div className="glass-premium p-8 md:p-12 border-white/5 rounded-[3rem] shadow-2xl">
-                                    <h3 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-10 flex items-center gap-4"><Award className="text-accent" /> {isEditingCert ? 'Recalibrate Document' : 'Initialize Document'}</h3>
-                                    <form onSubmit={handleCertificateSubmit} className="space-y-8">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                            <input type="text" placeholder="CERTIFICATE TITLE" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={certificateForm.title} onChange={e => setCertificateForm({...certificateForm, title: e.target.value})} required />
-                                            <input type="text" placeholder="ISSUED BY" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={certificateForm.issuer} onChange={e => setCertificateForm({...certificateForm, issuer: e.target.value})} required />
-                                            <input type="text" placeholder="DATE (e.g. March 2024)" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-[10px] font-black tracking-widest uppercase text-accent" value={certificateForm.date} onChange={e => setCertificateForm({...certificateForm, date: e.target.value})} required />
-                                            <input type="text" placeholder="VERIFICATION LINK (URL)" className="bg-white/5 border border-white/5 p-5 rounded-2xl text-[10px] outline-none focus:border-accent font-black tracking-widest" value={certificateForm.verify_link} onChange={e => setCertificateForm({...certificateForm, verify_link: e.target.value})} />
-                                            <label className="col-span-full py-5 bg-white/5 border border-white/10 text-center rounded-2xl text-[10px] font-black uppercase tracking-widest cursor-pointer hover:bg-white/10 transition-all flex items-center justify-center gap-4 relative overflow-hidden">
-                                                <FileText size={20} className="text-accent"/> {certificateForm.image_url ? 'Overwrite Document Visual' : 'Upload Certificate Binary (Image/PDF)'}
-                                                <input type="file" className="hidden" onChange={async (e) => { const url = await uploadCertificateMedia(e.target.files[0]); setCertificateForm({...certificateForm, image_url: url}); }} />
-                                            </label>
-                                        </div>
-                                        <button type="submit" className="w-full py-7 bg-white text-background font-black uppercase tracking-[0.5em] rounded-3xl hover:bg-accent hover:text-white transition-all text-xs shadow-glow-orange-lg">
-                                            {isEditingCert ? 'CONFIRM DOCUMENT UPDATE' : 'DEPLOY DOCUMENT NODE'}
-                                        </button>
-                                    </form>
-                                </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                                     {certificates.map(cert => (
                                         <div key={cert.id} className="glass-premium p-8 rounded-[2.5rem] border-white/5 flex flex-col gap-6 hover:bg-accent/5 transition-all group">
@@ -363,6 +354,26 @@ const AdminDashboard = () => {
                                             </div>
                                         </div>
                                     ))}
+                                    {certificates.length === 0 && <div className="col-span-full py-20 text-center text-white/5 font-black uppercase tracking-[0.5em] italic">No certificates archived.</div>}
+                                </div>
+                                <div className="glass-premium p-8 md:p-12 border-white/5 rounded-[3rem] shadow-2xl">
+                                    <h3 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-10 flex items-center gap-4"><Award className="text-accent" /> {isEditingCert ? 'Recalibrate Document' : 'Initialize Document'}</h3>
+                                    <form onSubmit={handleCertificateSubmit} className="space-y-8">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <input type="text" placeholder="CERTIFICATE TITLE" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={certificateForm.title} onChange={e => setCertificateForm({...certificateForm, title: e.target.value})} required />
+                                            <input type="text" placeholder="ISSUED BY" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={certificateForm.issuer} onChange={e => setCertificateForm({...certificateForm, issuer: e.target.value})} required />
+                                            <input type="text" placeholder="DATE (e.g. March 2024)" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-[10px] font-black tracking-widest uppercase text-accent" value={certificateForm.date} onChange={e => setCertificateForm({...certificateForm, date: e.target.value})} required />
+                                            <input type="text" placeholder="VERIFICATION LINK (URL)" className="bg-white/5 border border-white/5 p-5 rounded-2xl text-[10px] outline-none focus:border-accent font-black tracking-widest" value={certificateForm.verify_link} onChange={e => setCertificateForm({...certificateForm, verify_link: e.target.value})} />
+                                            <label className="col-span-full py-5 bg-white/5 border border-white/10 text-center rounded-2xl text-[10px] font-black uppercase tracking-widest cursor-pointer hover:bg-white/10 transition-all flex items-center justify-center gap-4 relative overflow-hidden">
+                                                <FileText size={20} className="text-accent"/> {certificateForm.image_url ? 'Overwrite Document Visual' : 'Upload Certificate Binary (Image/PDF)'}
+                                                <input type="file" className="hidden" onChange={async (e) => { const url = await uploadCertificateMedia(e.target.files[0]); setCertificateForm({...certificateForm, image_url: url}); }} />
+                                            </label>
+                                        </div>
+                                        <button type="submit" className="w-full py-7 bg-white text-background font-black uppercase tracking-[0.5em] rounded-3xl hover:bg-accent hover:text-white transition-all text-xs shadow-glow-orange-lg">
+                                            {isEditingCert ? 'CONFIRM DOCUMENT UPDATE' : 'DEPLOY DOCUMENT NODE'}
+                                        </button>
+                                        {isEditingCert && <button type="button" onClick={() => { setIsEditingCert(false); setCertificateForm({ title: '', issuer: '', date: '', image_url: '', verify_link: '' }); }} className="w-full py-3 text-white/30 uppercase font-black text-[10px] hover:text-white transition-all">Cancel Calibration</button>}
+                                    </form>
                                 </div>
                             </div>
                         )}
@@ -370,6 +381,22 @@ const AdminDashboard = () => {
                         {/* TAB CONTENT: SERVICES (SYSTEM) */}
                         {activeTab === 'services' && (
                             <div className="space-y-12">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    {services.map(s => (
+                                        <div key={s.id} className="glass-premium p-8 rounded-[2.5rem] border-white/5 flex flex-col gap-6 relative hover:bg-accent/5 transition-all">
+                                            <div className="w-14 h-14 bg-accent/20 rounded-2xl flex items-center justify-center text-accent shadow-glow-orange">
+                                                <Cpu size={24} />
+                                            </div>
+                                            <h4 className="text-lg font-black uppercase tracking-tighter">{s.title}</h4>
+                                            <p className="text-white/30 text-xs font-bold italic line-clamp-3">{s.description}</p>
+                                            <div className="flex gap-4 mt-4">
+                                                <button onClick={() => { setServiceForm(s); setIsEditingService(true); setCurrentServiceId(s.id); }} className="p-4 bg-white/10 hover:bg-accent hover:text-white rounded-xl transition-all"><Edit3 size={16} /></button>
+                                                <button onClick={async () => { if(window.confirm('Wipe system?')) { await deleteService(s.id); fetchData(); } }} className="p-4 bg-red-500/10 text-red-500 hover:bg-red-500 rounded-xl transition-all"><Trash2 size={16} /></button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {services.length === 0 && <div className="col-span-full py-20 text-center text-white/5 font-black uppercase tracking-[0.5em] italic">No systems online.</div>}
+                                </div>
                                 <div className="glass-premium p-8 md:p-12 border-white/5 rounded-[3rem] shadow-2xl">
                                     <h3 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-10 flex items-center gap-4"><Cpu className="text-accent" /> {isEditingService ? 'Recalibrate System' : 'Initialize System'}</h3>
                                     <form onSubmit={handleServiceSubmit} className="space-y-8">
@@ -386,22 +413,8 @@ const AdminDashboard = () => {
                                         <button type="submit" className="w-full py-7 bg-white text-background font-black uppercase tracking-[0.5em] rounded-3xl hover:bg-accent hover:text-white transition-all text-xs shadow-glow-orange-lg">
                                             {isEditingService ? 'CONFIRM SYSTEM UPDATE' : 'DEPLOY SYSTEM NODE'}
                                         </button>
+                                        {isEditingService && <button type="button" onClick={() => { setIsEditingService(false); setServiceForm({ title: '', description: '', icon: 'Code' }); }} className="w-full py-3 text-white/30 uppercase font-black text-[10px] hover:text-white transition-all">Cancel Calibration</button>}
                                     </form>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                                    {services.map(s => (
-                                        <div key={s.id} className="glass-premium p-8 rounded-[2.5rem] border-white/5 flex flex-col gap-6 relative hover:bg-accent/5 transition-all">
-                                            <div className="w-14 h-14 bg-accent/20 rounded-2xl flex items-center justify-center text-accent shadow-glow-orange">
-                                                <Cpu size={24} />
-                                            </div>
-                                            <h4 className="text-lg font-black uppercase tracking-tighter">{s.title}</h4>
-                                            <p className="text-white/30 text-xs font-bold italic line-clamp-3">{s.description}</p>
-                                            <div className="flex gap-4 mt-4">
-                                                <button onClick={() => { setServiceForm(s); setIsEditingService(true); setCurrentServiceId(s.id); }} className="p-4 bg-white/10 hover:bg-accent hover:text-white rounded-xl transition-all"><Edit3 size={16} /></button>
-                                                <button onClick={async () => { if(window.confirm('Wipe system?')) { await deleteService(s.id); fetchData(); } }} className="p-4 bg-red-500/10 text-red-500 hover:bg-red-500 rounded-xl transition-all"><Trash2 size={16} /></button>
-                                            </div>
-                                        </div>
-                                    ))}
                                 </div>
                             </div>
                         )}
@@ -409,20 +422,6 @@ const AdminDashboard = () => {
                         {/* TAB CONTENT: SKILLS (DNA) */}
                         {activeTab === 'skills' && (
                             <div className="space-y-12">
-                                <div className="glass-premium p-8 md:p-12 border-white/5 rounded-[3rem] shadow-2xl">
-                                    <h3 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-10 flex items-center gap-4"><Layers className="text-accent" /> Splice DNA</h3>
-                                    <form onSubmit={handleSkillSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
-                                        <div className="space-y-4">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Sequence Name</label>
-                                            <input type="text" placeholder="SKILL NAME" className="w-full bg-white/5 border border-white/5 p-5 rounded-2xl focus:border-accent outline-none font-bold text-white uppercase text-xs" value={skillForm.name} onChange={e => setSkillForm({...skillForm, name: e.target.value})} required />
-                                        </div>
-                                        <div className="space-y-4">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Mastery %: {skillForm.percentage}</label>
-                                            <input type="range" className="w-full accent-accent" min="0" max="100" value={skillForm.percentage} onChange={e => setSkillForm({...skillForm, percentage: e.target.value})} />
-                                        </div>
-                                        <button type="submit" className="py-5 bg-white text-background font-black uppercase tracking-[0.5em] rounded-2xl hover:bg-accent hover:text-white transition-all text-[10px] shadow-glow-orange-lg">SPLICE SEQUENCE</button>
-                                    </form>
-                                </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                                     {skills.map(s => (
                                         <div key={s.id} className="glass-premium p-6 rounded-3xl border-white/5 flex flex-col gap-4 relative group hover:scale-[1.02] transition-all">
@@ -436,6 +435,21 @@ const AdminDashboard = () => {
                                             <span className="text-[9px] font-bold text-white/20 uppercase tracking-widest self-end">{s.percentage}% Mastered</span>
                                         </div>
                                     ))}
+                                    {skills.length === 0 && <div className="col-span-full py-20 text-center text-white/5 font-black uppercase tracking-[0.5em] italic">No genetic sequences found.</div>}
+                                </div>
+                                <div className="glass-premium p-8 md:p-12 border-white/5 rounded-[3rem] shadow-2xl">
+                                    <h3 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-10 flex items-center gap-4"><Layers className="text-accent" /> Splice DNA</h3>
+                                    <form onSubmit={handleSkillSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
+                                        <div className="space-y-4">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Sequence Name</label>
+                                            <input type="text" placeholder="SKILL NAME" className="w-full bg-white/5 border border-white/5 p-5 rounded-2xl focus:border-accent outline-none font-bold text-white uppercase text-xs" value={skillForm.name} onChange={e => setSkillForm({...skillForm, name: e.target.value})} required />
+                                        </div>
+                                        <div className="space-y-4">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Mastery %: {skillForm.percentage}</label>
+                                            <input type="range" className="w-full accent-accent" min="0" max="100" value={skillForm.percentage} onChange={e => setSkillForm({...skillForm, percentage: e.target.value})} />
+                                        </div>
+                                        <button type="submit" className="py-5 bg-white text-background font-black uppercase tracking-[0.5em] rounded-2xl hover:bg-accent hover:text-white transition-all text-[10px] shadow-glow-orange-lg">SPLICE SEQUENCE</button>
+                                    </form>
                                 </div>
                             </div>
                         )}
