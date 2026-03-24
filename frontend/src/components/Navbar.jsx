@@ -48,7 +48,7 @@ const Navbar = () => {
           <div className="w-10 h-10 md:w-12 md:h-12 bg-accent rounded-2xl flex items-center justify-center text-white shadow-glow-orange group-hover:rotate-[360deg] transition-all duration-700">
             <ShieldCheck size={24} />
           </div>
-          <span className="text-xl md:text-2xl font-black italic tracking-tighter uppercase text-white group-hover:text-accent transition-colors">AUTHORITY.</span>
+          <span className="text-xl md:text-2xl font-black italic tracking-tighter uppercase text-white group-hover:text-accent transition-colors">PORTFOLIO.</span>
         </div>
 
         {/* Desktop Navigation */}

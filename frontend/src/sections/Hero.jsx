@@ -50,7 +50,7 @@ const Hero = ({ data, profileImage, role, socials }) => {
                 <div ref={contentRef} className="flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1">
                     <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.5em] text-white/40 px-6 py-2 border border-white/5 bg-white/[0.03] rounded-full mb-10 flex items-center gap-3">
                         <span className="w-2 h-2 bg-accent rounded-full animate-ping"></span>
-                        Status: Active Mission
+                        Status: Available
                     </span>
                     
                     <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black mb-8 tracking-tighter leading-[1.05] text-white drop-shadow-2xl">
