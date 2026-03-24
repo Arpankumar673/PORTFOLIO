@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+     scroll-behavior: smooth;
+     overflow-x: hidden;
+  }
+  body {
+    background-color: #080808;
+    color: #ffffff;
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    width: 100%;
+  }
+}
+
+@layer components {
+  /* Dynamic Glass Premium Layout */
+  .glass-premium {
+    @apply bg-white/[0.03] backdrop-blur-3xl border border-white/5 shadow-2xl;
+  }
+
+  /* Cinematic Orange Blobs */
+  .glow-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.15;
+    z-index: -10;
+    pointer-events: none;
+    background: radial-gradient(circle, #ff5e00 0%, transparent 70%);
+  }
+
+  /* Image Glow Ring */
+  .profile-glow {
+    @apply relative border-4 border-accent rounded-full shadow-glow-orange;
+  }
+
+  .profile-glow::after {
+    content: "";
+    @apply absolute -inset-4 rounded-full border border-accent/20;
+    animation: pulse-orange 4s infinite;
+  }
+
+  /* Responsive Orange Buttons */
+  .btn-orange {
+    @apply px-8 py-4 bg-accent text-white font-black rounded-full transition-all duration-300 shadow-glow-orange hover:shadow-glow-orange-lg hover:scale-105 active:scale-95 flex items-center justify-center uppercase tracking-widest whitespace-nowrap;
+  }
+
+  /* Card and Form Accents */
+  .input-orange {
+    @apply w-full bg-white/5 border border-white/5 rounded-2xl px-6 py-4 focus:outline-none focus:border-accent shadow-xl text-white font-bold transition-all;
+  }
+}
+
+/* Animations */
+@keyframes pulse-orange {
+  0% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 0.5; }
+}
+
+/* Scrollbar Management */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #ff5e00;
+  border-radius: 10px;
+}
+
+/* Global Selection */
+::selection {
+  background: rgba(255, 94, 0, 0.3);
+  color: white;
+}
