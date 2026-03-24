@@ -11,6 +11,17 @@ const ExternalLink = Icons.ExternalLink || Icons.ExternalLinkIcon || (() => null
 const Code = Icons.Code || Icons.CodeIcon || (() => null);
 
 const ProjectModal = ({ project, onClose }) => {
+    useEffect(() => {
+        if (project) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [project]);
+
     if (!project) return null;
 
     return (
@@ -19,7 +30,7 @@ const ProjectModal = ({ project, onClose }) => {
             <div className="absolute inset-0 bg-[#080808]/90 backdrop-blur-2xl" onClick={onClose}></div>
             
             {/* Modal Content */}
-            <div className="relative w-full max-w-5xl glass-premium border-white/5 bg-[#121212]/95 rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto lg:overflow-hidden">
+            <div className="relative w-full max-w-5xl glass-premium border-white/5 bg-[#121212]/95 rounded-[2.5rem] md:rounded-[3.5rem] shadow-2xl animate-in zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto">
                 <button 
                   onClick={onClose}
                   className="absolute top-6 right-6 p-4 bg-white/5 hover:bg-accent hover:text-white rounded-full transition-all z-20 shadow-lg active:scale-90"
@@ -27,9 +38,9 @@ const ProjectModal = ({ project, onClose }) => {
                     <X size={24} />
                 </button>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 h-auto lg:h-[650px]">
+                <div className="grid grid-cols-1 lg:grid-cols-12 h-auto">
                     {/* Media side */}
-                    <div className="lg:col-span-6 h-64 sm:h-80 md:h-[400px] lg:h-full bg-surface relative overflow-hidden flex items-center justify-center lg:rounded-l-[3.5rem]">
+                    <div className="lg:col-span-6 h-64 sm:h-80 md:h-[400px] lg:h-auto bg-surface relative overflow-hidden flex items-center justify-center lg:rounded-l-[3.5rem]">
                         {project.image_url ? (
                             <img src={project.image_url} alt={project.title} className="w-full h-full object-cover" />
                         ) : (
