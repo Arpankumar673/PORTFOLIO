@@ -71,14 +71,24 @@ const ProjectModal = ({ project, onClose }) => {
                            ))}
                         </div>
 
-                        <div className="flex flex-col sm:flex-row gap-6 mt-6">
+                        <div className="flex flex-col md:flex-row flex-wrap items-center gap-4 md:gap-6 mt-10 w-full">
                             {project.live_url && (
-                                <a href={project.live_url} target="_blank" rel="noreferrer" className="btn-orange flex items-center justify-center gap-4 py-5 flex-1 shadow-glow-orange hover:shadow-glow-orange-lg text-lg">
+                                <a 
+                                    href={project.live_url} 
+                                    target="_blank" 
+                                    rel="noreferrer" 
+                                    className="btn-orange flex items-center justify-center gap-4 py-4 px-8 flex-1 min-w-[170px] max-w-full shadow-glow-orange hover:shadow-glow-orange-lg text-base md:text-lg transition-all"
+                                >
                                     View Live <ExternalLink size={20} />
                                 </a>
                             )}
                             {project.github_url && (
-                                <a href={project.github_url} target="_blank" rel="noreferrer" className="bg-white text-background flex items-center justify-center gap-4 py-5 flex-1 rounded-full font-black uppercase tracking-widest text-lg hover:bg-accent hover:text-white transition-all shadow-xl active:scale-95">
+                                <a 
+                                    href={project.github_url} 
+                                    target="_blank" 
+                                    rel="noreferrer" 
+                                    className="bg-white text-background flex items-center justify-center gap-4 py-4 px-8 flex-1 min-w-[170px] max-w-full rounded-full font-black uppercase tracking-widest text-base md:text-lg hover:bg-accent hover:text-white transition-all shadow-xl active:scale-95"
+                                >
                                     Source Code <Github size={20} />
                                 </a>
                             )}
