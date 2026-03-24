@@ -69,7 +69,7 @@ const Hero = ({ data, profileImage, role, socials }) => {
                         <a 
                             href="#contact" 
                             onClick={handleContactClick}
-                            className="btn-orange px-14 py-6 text-xl shadow-glow-orange hover:shadow-glow-orange-lg text-center leading-none"
+                            className="btn-orange w-fit mx-auto lg:mx-0 px-14 py-6 text-xl shadow-glow-orange hover:shadow-glow-orange-lg text-center leading-none"
                         >
                             Let's Talk
                         </a>
