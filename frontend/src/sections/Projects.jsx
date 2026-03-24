@@ -74,12 +74,12 @@ const ProjectModal = ({ project, onClose }) => {
                         <div className="flex flex-col sm:flex-row gap-6 mt-6">
                             {project.live_url && (
                                 <a href={project.live_url} target="_blank" rel="noreferrer" className="btn-orange flex items-center justify-center gap-4 py-5 flex-1 shadow-glow-orange hover:shadow-glow-orange-lg text-lg">
-                                    Launch Mission <ExternalLink size={20} />
+                                    View Live <ExternalLink size={20} />
                                 </a>
                             )}
                             {project.github_url && (
                                 <a href={project.github_url} target="_blank" rel="noreferrer" className="bg-white text-background flex items-center justify-center gap-4 py-5 flex-1 rounded-full font-black uppercase tracking-widest text-lg hover:bg-accent hover:text-white transition-all shadow-xl active:scale-95">
-                                    Source Signal <Github size={20} />
+                                    Source Code <Github size={20} />
                                 </a>
                             )}
                         </div>
