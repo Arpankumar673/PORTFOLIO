@@ -178,6 +178,51 @@ const AdminDashboard = () => {
 
                 {!loading && (
                     <div className="max-w-6xl mx-auto space-y-20 md:space-y-24 animate-in fade-in duration-1000">
+                        {/* TAB CONTENT: PROJECTS (NODES) */}
+                        {activeTab === 'projects' && (
+                            <div className="space-y-12">
+                               <div className="glass-premium p-8 md:p-12 border-white/5 flex flex-col gap-10 rounded-[3rem] shadow-2xl">
+                                    <h3 className="text-2xl md:text-3xl font-black italic tracking-tighter uppercase text-white flex items-center gap-4"><Plus className="text-accent" /> {isEditingProj ? 'Reconfigure Node' : 'Initialize Node'}</h3>
+                                    <form onSubmit={handleProjectSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                                        <div className="space-y-8 flex flex-col gap-4">
+                                            <input type="text" placeholder="PROJECT TITLE" className="w-full bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase" value={projectForm.title} onChange={e => setProjectForm({...projectForm, title: e.target.value})} required />
+                                            <input type="text" placeholder="TECH STACK" className="w-full bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-[10px] font-bold uppercase tracking-widest text-accent" value={projectForm.tech_stack} onChange={e => setProjectForm({...projectForm, tech_stack: e.target.value})} required />
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                                <input type="text" placeholder="LIVE URL" className="bg-white/5 border border-white/5 p-5 rounded-2xl text-[10px] outline-none focus:border-accent font-black tracking-widest" value={projectForm.live_url} onChange={e => setProjectForm({...projectForm, live_url: e.target.value})} />
+                                                <input type="text" placeholder="GITHUB URL" className="bg-white/5 border border-white/5 p-5 rounded-2xl text-[10px] outline-none focus:border-accent font-black tracking-widest" value={projectForm.github_url} onChange={e => setProjectForm({...projectForm, github_url: e.target.value})} />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-8 flex flex-col">
+                                            <textarea placeholder="PROJECT DESCRIPTION" className="flex-1 bg-white/5 border border-white/5 p-8 rounded-3xl focus:border-accent outline-none text-base font-bold italic resize-none min-h-[160px]" value={projectForm.description} onChange={e => setProjectForm({...projectForm, description: e.target.value})} required />
+                                            <label className="py-5 bg-white/5 border border-white/10 text-center rounded-2xl text-[10px] font-black uppercase tracking-widest cursor-pointer hover:bg-white/10 transition-all flex items-center justify-center gap-4 relative overflow-hidden">
+                                                <Camera size={20} className="text-accent"/> {projectForm.image_url ? 'Overwrite Node Visual' : 'Upload System Meta'}
+                                                <input type="file" className="hidden" onChange={handleProjectImage} />
+                                            </label>
+                                        </div>
+                                        <button type="submit" className="col-span-full py-7 bg-white text-background font-black uppercase tracking-[0.5em] rounded-3xl hover:bg-accent hover:text-white transition-all text-xs shadow-glow-orange-lg">
+                                            {isEditingProj ? 'CONFIRM MISSION LOGS' : 'INITIALIZE SYSTEM SEQUENCE'}
+                                        </button>
+                                    </form>
+                               </div>
+                               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    {projects.map(p => (
+                                        <div key={p.id} className="glass-premium p-8 rounded-[2.5rem] border-white/5 flex flex-col gap-6 relative group hover:bg-accent/5 transition-all">
+                                            <div className="aspect-video bg-white/5 rounded-2xl overflow-hidden shadow-2xl">
+                                                {p.image_url ? <img src={p.image_url} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" /> : <div className="w-full h-full flex items-center justify-center text-white/5 font-black uppercase italic text-xs">Buffer Empty</div>}
+                                            </div>
+                                            <div className="flex justify-between items-center gap-4">
+                                                <h4 className="text-lg font-black uppercase tracking-tighter truncate">{p.title}</h4>
+                                                <div className="flex gap-2 flex-shrink-0">
+                                                    <button onClick={() => { setProjectForm(p); setIsEditingProj(true); setCurrentProjId(p.id); }} className="w-10 h-10 bg-white/10 hover:bg-accent hover:text-white rounded-full flex items-center justify-center transition-all"><Edit3 size={16} /></button>
+                                                    <button onClick={async () => { if(window.confirm('Wipe node?')) { await deleteProject(p.id); fetchData(); } }} className="w-10 h-10 bg-red-500/10 text-red-500 hover:bg-red-500 rounded-full flex items-center justify-center transition-all"><Trash2 size={16} /></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                               </div>
+                            </div>
+                        )}
+
                         {/* TAB CONTENT: SERVICES (SYSTEM) */}
                         {activeTab === 'services' && (
                             <div className="space-y-12">
