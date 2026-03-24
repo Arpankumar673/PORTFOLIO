@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Lenis from '@studio-freight/lenis';
-import { getProjects, getSkills, getServices, getAbout, getProfileData, getSocialLinks } from '../lib/services';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import Loading from '../components/Loading';
-import Hero from '../sections/Hero';
-import About from '../sections/About';
-import Projects from '../sections/Projects';
-import Skills from '../sections/Skills';
 import Services from '../sections/Services';
 import Contact from '../sections/Contact';
+import Experience from '../sections/Experience';
+import Certificates from '../sections/Certificates';
+import { getProjects, getSkills, getServices, getAbout, getProfileData, getSocialLinks, getExperience, getCertificates } from '../lib/services';
 
 const Home = () => {
   const [data, setData] = useState({ 
@@ -18,7 +13,9 @@ const Home = () => {
     services: [], 
     about: null, 
     profile: { image_url: '', role: '' },
-    socials: { twitter: '#', github: '#', linkedin: '#', email: '#' }
+    socials: { twitter: '#', github: '#', linkedin: '#', email: '#' },
+    experience: [],
+    certificates: []
   });
   const [loading, setLoading] = useState(true);
 
@@ -38,13 +35,15 @@ const Home = () => {
 
     const fetchData = async () => {
       try {
-        const [proj, skl, serv, abt, prof, soc] = await Promise.all([
+        const [proj, skl, serv, abt, prof, soc, exp, cert] = await Promise.all([
           getProjects(),
           getSkills(),
           getServices(),
           getAbout(),
           getProfileData(),
-          getSocialLinks()
+          getSocialLinks(),
+          getExperience(),
+          getCertificates()
         ]);
         
         setData({ 
@@ -53,7 +52,9 @@ const Home = () => {
             services: serv, 
             about: abt, 
             profile: prof,
-            socials: soc
+            socials: soc,
+            experience: exp,
+            certificates: cert
         });
       } catch (err) {
         console.error("Fetch Error: ", err);
@@ -85,6 +86,8 @@ const Home = () => {
       <div className="bg-[#080808]">
          <Services services={data.services} />
          <Skills skills={data.skills} />
+         <Experience experience={data.experience} />
+         <Certificates certificates={data.certificates} />
          <Projects projects={data.projects} />
          <Contact />
       </div>

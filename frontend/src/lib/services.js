@@ -144,3 +144,68 @@ export const uploadProjectImage = async (file) => {
     const { data: { publicUrl } } = supabase.storage.from('project-images').getPublicUrl(fileName);
     return publicUrl;
 };
+
+// NEW: Experience System
+export const getExperience = async () => {
+    const { data, error } = await supabase.from('experience').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    return data;
+};
+
+export const createExperience = async (exp) => {
+    const { data, error } = await supabase.from('experience').insert([exp]).select();
+    if (error) throw error;
+    return data[0];
+};
+
+export const updateExperience = async (id, exp) => {
+    const { data, error } = await supabase.from('experience').update(exp).eq('id', id).select();
+    if (error) throw error;
+    return data[0];
+};
+
+export const deleteExperience = async (id) => {
+    const { error } = await supabase.from('experience').delete().eq('id', id);
+    if (error) throw error;
+};
+
+export const uploadCompanyLogo = async (file) => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `logo-${Date.now()}.${fileExt}`;
+    const { data, error } = await supabase.storage.from('company-logos').upload(fileName, file, { cacheControl: '3600', upsert: true });
+    if (error) throw error;
+    return (await supabase.storage.from('company-logos').getPublicUrl(fileName)).data.publicUrl;
+};
+
+// NEW: Certificates System
+export const getCertificates = async () => {
+    const { data, error } = await supabase.from('certificates').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    return data;
+};
+
+export const createCertificates = async (cert) => {
+    const { data, error } = await supabase.from('certificates').insert([cert]).select();
+    if (error) throw error;
+    return data[0];
+};
+
+export const updateCertificates = async (id, cert) => {
+    const { data, error } = await supabase.from('certificates').update(cert).eq('id', id).select();
+    if (error) throw error;
+    return data[0];
+};
+
+export const deleteCertificates = async (id) => {
+    const { error } = await supabase.from('certificates').delete().eq('id', id);
+    if (error) throw error;
+};
+
+export const uploadCertificateMedia = async (file) => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `cert-${Date.now()}.${fileExt}`;
+    const { data, error } = await supabase.storage.from('certificates').upload(fileName, file, { cacheControl: '3600', upsert: true });
+    if (error) throw error;
+    return (await supabase.storage.from('certificates').getPublicUrl(fileName)).data.publicUrl;
+};
+

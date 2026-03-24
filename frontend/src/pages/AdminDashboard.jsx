@@ -2,12 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
-    getProjects, createProject, updateProject, deleteProject, 
-    getSkills, createSkill, deleteSkill, 
-    getServices, createService, updateService, deleteService,
-    getAbout, updateAbout, getMessages, deleteMessage,
-    getSocialLinks, updateSocialLinks,
-    uploadResume, uploadProfileImage, getProfileData, updateProfileData, uploadProjectImage 
+    uploadResume, uploadProfileImage, getProfileData, updateProfileData, uploadProjectImage,
+    getExperience, createExperience, updateExperience, deleteExperience, uploadCompanyLogo,
+    getCertificates, createCertificates, updateCertificates, deleteCertificates, uploadCertificateMedia
 } from '../lib/services';
 import * as Icons from 'lucide-react';
 
@@ -33,6 +30,9 @@ const FileText = Icons.FileText || Icons.FileTextIcon || (() => null);
 const Download = Icons.Download || Icons.DownloadIcon || (() => null);
 const ExternalLink = Icons.ExternalLink || Icons.ExternalLinkIcon || (() => null);
 const X = Icons.X || Icons.XIcon || (() => null);
+const Award = Icons.Award || Icons.AwardIcon || (() => null);
+const Calendar = Icons.Calendar || Icons.CalendarIcon || (() => null);
+const Link = Icons.Link || Icons.LinkIcon || (() => null);
 
 const AdminDashboard = () => {
     const { logoutUser } = useAuth();
@@ -48,6 +48,8 @@ const AdminDashboard = () => {
     const [profile, setProfile] = useState({ image_url: '', role: '' });
     const [messages, setMessages] = useState([]);
     const [socials, setSocials] = useState({ twitter: '', github: '', linkedin: '', email: '' });
+    const [experience, setExperience] = useState([]);
+    const [certificates, setCertificates] = useState([]);
 
     // Forms
     const [projectForm, setProjectForm] = useState({ title: '', description: '', tech_stack: '', live_url: '', github_url: '', image_url: '' });
@@ -60,6 +62,14 @@ const AdminDashboard = () => {
 
     const [skillForm, setSkillForm] = useState({ name: '', percentage: '80', category: 'Frontend' });
 
+    const [experienceForm, setExperienceForm] = useState({ role: '', company: '', duration: '', description: '', logo_url: '' });
+    const [isEditingExp, setIsEditingExp] = useState(false);
+    const [currentExpId, setCurrentExpId] = useState(null);
+
+    const [certificateForm, setCertificateForm] = useState({ title: '', issuer: '', date: '', image_url: '', verify_link: '' });
+    const [isEditingCert, setIsEditingCert] = useState(false);
+    const [currentCertId, setCurrentCertId] = useState(null);
+
     useEffect(() => {
         fetchData();
         const handleResize = () => { if (window.innerWidth >= 1024) setSidebarOpen(false); };
@@ -70,8 +80,8 @@ const AdminDashboard = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [p, s, sl, a, m, prof, soc] = await Promise.all([
-                getProjects(), getSkills(), getServices(), getAbout(), getMessages(), getProfileData(), getSocialLinks()
+            const [p, s, sl, a, m, prof, soc, exp, cert] = await Promise.all([
+                getProjects(), getSkills(), getServices(), getAbout(), getMessages(), getProfileData(), getSocialLinks(), getExperience(), getCertificates()
             ]);
             setProjects(p);
             setSkills(s);
@@ -80,6 +90,8 @@ const AdminDashboard = () => {
             setMessages(m);
             setProfile(prof);
             setSocials(soc);
+            setExperience(exp);
+            setCertificates(cert);
         } catch (err) { console.error("Sync Error: ", err); } 
         finally { setLoading(false); }
     };
@@ -154,12 +166,34 @@ const AdminDashboard = () => {
         } catch (err) { alert(err.message); }
     };
 
+    const handleExperienceSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            isEditingExp ? await updateExperience(currentExpId, experienceForm) : await createExperience(experienceForm);
+            setExperienceForm({ role: '', company: '', duration: '', description: '', logo_url: '' });
+            setIsEditingExp(false);
+            fetchData();
+        } catch (err) { alert(err.message); }
+    };
+
+    const handleCertificateSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            isEditingCert ? await updateCertificates(currentCertId, certificateForm) : await createCertificates(certificateForm);
+            setCertificateForm({ title: '', issuer: '', date: '', image_url: '', verify_link: '' });
+            setIsEditingCert(false);
+            fetchData();
+        } catch (err) { alert(err.message); }
+    };
+
     const handleLogout = async () => { await logoutUser(); navigate('/'); };
 
     const NavigationLinks = () => (
         <nav className="flex flex-col gap-4 flex-1">
             {[
                 { id: 'projects', icon: <LayoutGrid size={20} />, label: 'Nodes' },
+                { id: 'experience', icon: <Briefcase size={20} />, label: 'Chronicle' },
+                { id: 'certificates', icon: <Award size={20} />, label: 'Verify' },
                 { id: 'services', icon: <Cpu size={20} />, label: 'System' },
                 { id: 'skills', icon: <Layers size={20} />, label: 'DNA' },
                 { id: 'about', icon: <User size={20} />, label: 'Persona' },
@@ -247,6 +281,89 @@ const AdminDashboard = () => {
                                         </div>
                                     ))}
                                </div>
+                            </div>
+                        )}
+
+                        {/* TAB CONTENT: EXPERIENCE (CHRONICLE) */}
+                        {activeTab === 'experience' && (
+                            <div className="space-y-12">
+                                <div className="glass-premium p-8 md:p-12 border-white/5 rounded-[3rem] shadow-2xl">
+                                    <h3 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-10 flex items-center gap-4"><Briefcase className="text-accent" /> {isEditingExp ? 'Recalibrate Timeline' : 'Initialize Timeline'}</h3>
+                                    <form onSubmit={handleExperienceSubmit} className="space-y-8">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <input type="text" placeholder="ROLE TITLE" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={experienceForm.role} onChange={e => setExperienceForm({...experienceForm, role: e.target.value})} required />
+                                            <input type="text" placeholder="COMPANY NAME" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={experienceForm.company} onChange={e => setExperienceForm({...experienceForm, company: e.target.value})} required />
+                                            <input type="text" placeholder="DURATION (e.g. Jan 2024 - Present)" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-[10px] font-black tracking-widest uppercase text-accent" value={experienceForm.duration} onChange={e => setExperienceForm({...experienceForm, duration: e.target.value})} required />
+                                            <label className="py-5 bg-white/5 border border-white/10 text-center rounded-2xl text-[10px] font-black uppercase tracking-widest cursor-pointer hover:bg-white/10 transition-all flex items-center justify-center gap-4 relative overflow-hidden">
+                                                <Camera size={20} className="text-accent"/> {experienceForm.logo_url ? 'Overwrite Logo' : 'Upload Company Logo'}
+                                                <input type="file" className="hidden" onChange={async (e) => { const url = await uploadCompanyLogo(e.target.files[0]); setExperienceForm({...experienceForm, logo_url: url}); }} />
+                                            </label>
+                                        </div>
+                                        <textarea placeholder="EXPERIENCE DESCRIPTION" className="w-full bg-white/5 border border-white/5 p-8 rounded-3xl focus:border-accent outline-none text-base font-bold italic resize-none min-h-[140px]" value={experienceForm.description} onChange={e => setExperienceForm({...experienceForm, description: e.target.value})} required />
+                                        <button type="submit" className="w-full py-7 bg-white text-background font-black uppercase tracking-[0.5em] rounded-3xl hover:bg-accent hover:text-white transition-all text-xs shadow-glow-orange-lg">
+                                            {isEditingExp ? 'CONFIRM TIMELINE UPDATE' : 'DEPLOY TIMELINE NODE'}
+                                        </button>
+                                    </form>
+                                </div>
+                                <div className="space-y-6">
+                                    {experience.map(exp => (
+                                        <div key={exp.id} className="glass-premium p-8 rounded-[2.5rem] border-white/5 flex flex-col md:flex-row items-center gap-10 hover:bg-accent/[0.03] transition-all">
+                                            <div className="w-20 h-20 bg-white/5 rounded-2xl overflow-hidden flex-shrink-0">
+                                                {exp.logo_url ? <img src={exp.logo_url} className="w-full h-full object-contain p-2" /> : <Briefcase size={32} className="w-full h-full p-6 text-white/5" />}
+                                            </div>
+                                            <div className="flex-1 space-y-2">
+                                                <h4 className="text-xl font-black uppercase tracking-tighter">{exp.role}</h4>
+                                                <p className="text-accent text-[10px] font-black uppercase tracking-[0.2em]">{exp.company} • {exp.duration}</p>
+                                                <p className="text-white/30 text-xs font-bold italic line-clamp-2">{exp.description}</p>
+                                            </div>
+                                            <div className="flex gap-4">
+                                                <button onClick={() => { setExperienceForm(exp); setIsEditingExp(true); setCurrentExpId(exp.id); }} className="p-4 bg-white/10 hover:bg-accent hover:text-white rounded-xl transition-all"><Edit3 size={16} /></button>
+                                                <button onClick={async () => { if(window.confirm('Wipe timeline node?')) { await deleteExperience(exp.id); fetchData(); } }} className="p-4 bg-red-500/10 text-red-500 hover:bg-red-500 rounded-xl transition-all"><Trash2 size={16} /></button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* TAB CONTENT: CERTIFICATES (VERIFY) */}
+                        {activeTab === 'certificates' && (
+                            <div className="space-y-12">
+                                <div className="glass-premium p-8 md:p-12 border-white/5 rounded-[3rem] shadow-2xl">
+                                    <h3 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-10 flex items-center gap-4"><Award className="text-accent" /> {isEditingCert ? 'Recalibrate Document' : 'Initialize Document'}</h3>
+                                    <form onSubmit={handleCertificateSubmit} className="space-y-8">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <input type="text" placeholder="CERTIFICATE TITLE" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={certificateForm.title} onChange={e => setCertificateForm({...certificateForm, title: e.target.value})} required />
+                                            <input type="text" placeholder="ISSUED BY" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={certificateForm.issuer} onChange={e => setCertificateForm({...certificateForm, issuer: e.target.value})} required />
+                                            <input type="text" placeholder="DATE (e.g. March 2024)" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-[10px] font-black tracking-widest uppercase text-accent" value={certificateForm.date} onChange={e => setCertificateForm({...certificateForm, date: e.target.value})} required />
+                                            <input type="text" placeholder="VERIFICATION LINK (URL)" className="bg-white/5 border border-white/5 p-5 rounded-2xl text-[10px] outline-none focus:border-accent font-black tracking-widest" value={certificateForm.verify_link} onChange={e => setCertificateForm({...certificateForm, verify_link: e.target.value})} />
+                                            <label className="col-span-full py-5 bg-white/5 border border-white/10 text-center rounded-2xl text-[10px] font-black uppercase tracking-widest cursor-pointer hover:bg-white/10 transition-all flex items-center justify-center gap-4 relative overflow-hidden">
+                                                <FileText size={20} className="text-accent"/> {certificateForm.image_url ? 'Overwrite Document Visual' : 'Upload Certificate Binary (Image/PDF)'}
+                                                <input type="file" className="hidden" onChange={async (e) => { const url = await uploadCertificateMedia(e.target.files[0]); setCertificateForm({...certificateForm, image_url: url}); }} />
+                                            </label>
+                                        </div>
+                                        <button type="submit" className="w-full py-7 bg-white text-background font-black uppercase tracking-[0.5em] rounded-3xl hover:bg-accent hover:text-white transition-all text-xs shadow-glow-orange-lg">
+                                            {isEditingCert ? 'CONFIRM DOCUMENT UPDATE' : 'DEPLOY DOCUMENT NODE'}
+                                        </button>
+                                    </form>
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    {certificates.map(cert => (
+                                        <div key={cert.id} className="glass-premium p-8 rounded-[2.5rem] border-white/5 flex flex-col gap-6 hover:bg-accent/5 transition-all group">
+                                            <div className="aspect-[4/3] bg-white/5 rounded-2xl overflow-hidden relative">
+                                                {cert.image_url ? <img src={cert.image_url} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" /> : <div className="w-full h-full flex items-center justify-center text-white/5 font-black uppercase italic text-[10px]">Binary Empty</div>}
+                                                <div className="absolute top-4 right-4 flex gap-2">
+                                                    <button onClick={() => { setCertificateForm(cert); setIsEditingCert(true); setCurrentCertId(cert.id); }} className="w-10 h-10 bg-black/50 backdrop-blur-md hover:bg-accent text-white rounded-full flex items-center justify-center transition-all"><Edit3 size={16} /></button>
+                                                    <button onClick={async () => { if(window.confirm('Wipe document?')) { await deleteCertificates(cert.id); fetchData(); } }} className="w-10 h-10 bg-black/50 backdrop-blur-md hover:bg-red-500 text-white rounded-full flex items-center justify-center transition-all"><Trash2 size={16} /></button>
+                                                </div>
+                                            </div>
+                                            <div className="space-y-1">
+                                                <h4 className="text-lg font-black uppercase tracking-tighter truncate">{cert.title}</h4>
+                                                <p className="text-accent text-[9px] font-black uppercase tracking-widest">{cert.issuer} • {cert.date}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
 
