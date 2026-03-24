@@ -222,7 +222,7 @@ const AdminDashboard = () => {
     return (
         <div className="min-h-screen bg-[#08080c] text-white flex overflow-hidden font-sans select-none">
             {/* Sidebar Shell */}
-            <aside className={`fixed lg:relative inset-y-0 left-0 w-80 h-screen glass border-r border-white/5 flex flex-col p-10 z-[100] transition-transform duration-700 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+            <aside className={`fixed lg:relative inset-y-0 left-0 w-80 h-screen glass border-r border-white/5 flex flex-col p-10 z-[100] transition-transform duration-700 overflow-y-auto scrollbar-premium ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
                 <div className="flex flex-col gap-4 mb-20 text-center items-center relative">
                     <ShieldCheck size={32} className="text-accent shadow-glow-orange" />
                     <h1 className="text-2xl font-black uppercase tracking-tighter mt-4 italic">Authority Hub</h1>

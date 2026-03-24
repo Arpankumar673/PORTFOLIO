@@ -75,6 +75,21 @@
   border-radius: 10px;
 }
 
+/* Premium Component Scrollbar */
+.scrollbar-premium::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollbar-premium::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-premium::-webkit-scrollbar-thumb {
+  background: rgba(255, 94, 0, 0.2);
+  border-radius: 10px;
+}
+.scrollbar-premium:hover::-webkit-scrollbar-thumb {
+  background: rgba(255, 94, 0, 0.5);
+}
+
 /* Global Selection */
 ::selection {
   background: rgba(255, 94, 0, 0.3);
