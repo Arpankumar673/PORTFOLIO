@@ -4,6 +4,13 @@ import Services from '../sections/Services';
 import Contact from '../sections/Contact';
 import Experience from '../sections/Experience';
 import Certificates from '../sections/Certificates';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import Loading from '../components/Loading';
+import Hero from '../sections/Hero';
+import About from '../sections/About';
+import Projects from '../sections/Projects';
+import Skills from '../sections/Skills';
 import { getProjects, getSkills, getServices, getAbout, getProfileData, getSocialLinks, getExperience, getCertificates } from '../lib/services';
 
 const Home = () => {
