@@ -42,7 +42,7 @@ const Navbar = () => {
       <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${scrolled ? 'py-4 bg-[#0a0a0a]/90 backdrop-blur-xl border-b border-white/5 shadow-2xl' : 'py-8 bg-transparent'}`}>
         <div className="container mx-auto px-6 md:px-12 lg:px-20 flex justify-between items-center">
           {/* Logo Section */}
-          <div onClick={handleLogoClick} className="group cursor-pointer flex items-center gap-3 select-none">
+          <div onClick={handleLogoClick} className="group cursor-pointer flex items-center gap-3 select-none flex-shrink-0">
             <div className="w-10 h-10 md:w-12 md:h-12 bg-accent rounded-2xl flex items-center justify-center text-white shadow-glow-orange group-hover:rotate-[360deg] transition-all duration-700">
               <ShieldCheck size={24} />
             </div>
@@ -50,14 +50,14 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex gap-10 xl:gap-14 items-center">
+          <div className="hidden lg:flex gap-6 xl:gap-10 items-center ml-10">
             {navLinks.map((link) => (
-              <a key={link.name} href={link.href} className="text-[10px] xl:text-[11px] font-black uppercase tracking-[0.4em] text-white/40 hover:text-accent transition-all duration-300 relative group">
+              <a key={link.name} href={link.href} className="text-[10px] xl:text-[11px] font-black uppercase tracking-[0.15em] text-white/40 hover:text-accent transition-all duration-300 relative group truncate">
                 {link.name}
                 <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-accent group-hover:w-full transition-all duration-500"></span>
               </a>
             ))}
-            <a href="#contact" className="btn-orange px-8 py-3 text-[10px] xl:text-[11px] font-black uppercase tracking-widest leading-none">Let's Talk</a>
+            <a href="#contact" className="btn-orange px-8 py-3 text-[10px] xl:text-[11px] font-black uppercase tracking-widest leading-none flex-shrink-0">Let's Talk</a>
           </div>
 
           {/* Mobile Toggle Button */}
