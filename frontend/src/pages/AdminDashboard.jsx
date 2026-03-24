@@ -178,51 +178,80 @@ const AdminDashboard = () => {
 
                 {!loading && (
                     <div className="max-w-6xl mx-auto space-y-20 md:space-y-24 animate-in fade-in duration-1000">
-                        {/* TAB CONTENT: PROJECTS */}
-                        {activeTab === 'projects' && (
+                        {/* TAB CONTENT: SERVICES (SYSTEM) */}
+                        {activeTab === 'services' && (
                             <div className="space-y-12">
-                               <div className="glass-premium p-8 md:p-12 border-white/5 flex flex-col gap-10 rounded-[3rem] shadow-2xl">
-                                    <h3 className="text-2xl md:text-3xl font-black italic tracking-tighter uppercase text-white flex items-center gap-4"><Plus className="text-accent" /> {isEditingProj ? 'Reconfigure Node' : 'Initialize Node'}</h3>
-                                    <form onSubmit={handleProjectSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                                        <div className="space-y-8 flex flex-col gap-4">
-                                            <input type="text" placeholder="PROJECT TITLE" className="w-full bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase" value={projectForm.title} onChange={e => setProjectForm({...projectForm, title: e.target.value})} required />
-                                            <input type="text" placeholder="TECH STACK" className="w-full bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-[10px] font-bold uppercase tracking-widest text-accent" value={projectForm.tech_stack} onChange={e => setProjectForm({...projectForm, tech_stack: e.target.value})} required />
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                                <input type="text" placeholder="LIVE URL" className="bg-white/5 border border-white/5 p-5 rounded-2xl text-[10px] outline-none focus:border-accent font-black tracking-widest" value={projectForm.live_url} onChange={e => setProjectForm({...projectForm, live_url: e.target.value})} />
-                                                <input type="text" placeholder="GITHUB URL" className="bg-white/5 border border-white/5 p-5 rounded-2xl text-[10px] outline-none focus:border-accent font-black tracking-widest" value={projectForm.github_url} onChange={e => setProjectForm({...projectForm, github_url: e.target.value})} />
-                                            </div>
+                                <div className="glass-premium p-8 md:p-12 border-white/5 rounded-[3rem] shadow-2xl">
+                                    <h3 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-10 flex items-center gap-4"><Cpu className="text-accent" /> {isEditingService ? 'Recalibrate System' : 'Initialize System'}</h3>
+                                    <form onSubmit={handleServiceSubmit} className="space-y-8">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                            <input type="text" placeholder="SERVICE TITLE" className="bg-transparent border-b border-white/10 py-5 focus:border-accent outline-none text-2xl font-black uppercase text-white" value={serviceForm.title} onChange={e => setServiceForm({...serviceForm, title: e.target.value})} required />
+                                            <select className="bg-white/5 border border-white/10 p-5 rounded-2xl text-[10px] font-black tracking-widest outline-none focus:border-accent" value={serviceForm.icon} onChange={e => setServiceForm({...serviceForm, icon: e.target.value})}>
+                                                <option value="Code">Code</option>
+                                                <option value="Globe">Globe</option>
+                                                <option value="Cpu">Cpu</option>
+                                                <option value="Layers">Layers</option>
+                                            </select>
                                         </div>
-                                        <div className="space-y-8 flex flex-col">
-                                            <textarea placeholder="PROJECT DESCRIPTION" className="flex-1 bg-white/5 border border-white/5 p-8 rounded-3xl focus:border-accent outline-none text-base font-bold italic resize-none min-h-[160px]" value={projectForm.description} onChange={e => setProjectForm({...projectForm, description: e.target.value})} required />
-                                            <label className="py-5 bg-white/5 border border-white/10 text-center rounded-2xl text-[10px] font-black uppercase tracking-widest cursor-pointer hover:bg-white/10 transition-all flex items-center justify-center gap-4 relative overflow-hidden">
-                                                <Camera size={20} className="text-accent"/> {projectForm.image_url ? 'Overwrite Node Visual' : 'Upload System Meta'}
-                                                <input type="file" className="hidden" onChange={handleProjectImage} />
-                                            </label>
-                                        </div>
-                                        <button type="submit" className="col-span-full py-7 bg-white text-background font-black uppercase tracking-[0.5em] rounded-3xl hover:bg-accent hover:text-white transition-all text-xs shadow-glow-orange-lg">
-                                            {isEditingProj ? 'CONFIRM MISSION LOGS' : 'INITIALIZE SYSTEM SEQUENCE'}
+                                        <textarea placeholder="SYSTEM CAPABILITIES" className="w-full bg-white/5 border border-white/5 p-8 rounded-3xl focus:border-accent outline-none text-base font-bold italic resize-none min-h-[140px]" value={serviceForm.description} onChange={e => setServiceForm({...serviceForm, description: e.target.value})} required />
+                                        <button type="submit" className="w-full py-7 bg-white text-background font-black uppercase tracking-[0.5em] rounded-3xl hover:bg-accent hover:text-white transition-all text-xs shadow-glow-orange-lg">
+                                            {isEditingService ? 'CONFIRM SYSTEM UPDATE' : 'DEPLOY SYSTEM NODE'}
                                         </button>
                                     </form>
-                               </div>
-                               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                                    {projects.map(p => (
-                                        <div key={p.id} className="glass-premium p-8 rounded-[2.5rem] border-white/5 flex flex-col gap-6 relative group hover:bg-accent/5 transition-all">
-                                            <div className="aspect-video bg-white/5 rounded-2xl overflow-hidden shadow-2xl">
-                                                {p.image_url ? <img src={p.image_url} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" /> : <div className="w-full h-full flex items-center justify-center text-white/5 font-black uppercase italic text-xs">Buffer Empty</div>}
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    {services.map(s => (
+                                        <div key={s.id} className="glass-premium p-8 rounded-[2.5rem] border-white/5 flex flex-col gap-6 relative hover:bg-accent/5 transition-all">
+                                            <div className="w-14 h-14 bg-accent/20 rounded-2xl flex items-center justify-center text-accent shadow-glow-orange">
+                                                <Cpu size={24} />
                                             </div>
-                                            <div className="flex justify-between items-center gap-4">
-                                                <h4 className="text-lg font-black uppercase tracking-tighter truncate">{p.title}</h4>
-                                                <div className="flex gap-2 flex-shrink-0">
-                                                    <button onClick={() => { setProjectForm(p); setIsEditingProj(true); setCurrentProjId(p.id); }} className="w-10 h-10 bg-white/10 hover:bg-accent hover:text-white rounded-full flex items-center justify-center transition-all"><Edit3 size={16} /></button>
-                                                    <button onClick={async () => { if(window.confirm('Wipe node?')) { await deleteProject(p.id); fetchData(); } }} className="w-10 h-10 bg-red-500/10 text-red-500 hover:bg-red-500 rounded-full flex items-center justify-center transition-all"><Trash2 size={16} /></button>
-                                                </div>
+                                            <h4 className="text-lg font-black uppercase tracking-tighter">{s.title}</h4>
+                                            <p className="text-white/30 text-xs font-bold italic line-clamp-3">{s.description}</p>
+                                            <div className="flex gap-4 mt-4">
+                                                <button onClick={() => { setServiceForm(s); setIsEditingService(true); setCurrentServiceId(s.id); }} className="p-4 bg-white/10 hover:bg-accent hover:text-white rounded-xl transition-all"><Edit3 size={16} /></button>
+                                                <button onClick={async () => { if(window.confirm('Wipe system?')) { await deleteService(s.id); fetchData(); } }} className="p-4 bg-red-500/10 text-red-500 hover:bg-red-500 rounded-xl transition-all"><Trash2 size={16} /></button>
                                             </div>
                                         </div>
                                     ))}
-                               </div>
+                                </div>
                             </div>
                         )}
-                        {/* Other tab logic follows same mobile-first stacking patterns */}
+
+                        {/* TAB CONTENT: SKILLS (DNA) */}
+                        {activeTab === 'skills' && (
+                            <div className="space-y-12">
+                                <div className="glass-premium p-8 md:p-12 border-white/5 rounded-[3rem] shadow-2xl">
+                                    <h3 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-10 flex items-center gap-4"><Layers className="text-accent" /> Splice DNA</h3>
+                                    <form onSubmit={handleSkillSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-8 items-end">
+                                        <div className="space-y-4">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Sequence Name</label>
+                                            <input type="text" placeholder="SKILL NAME" className="w-full bg-white/5 border border-white/5 p-5 rounded-2xl focus:border-accent outline-none font-bold text-white uppercase text-xs" value={skillForm.name} onChange={e => setSkillForm({...skillForm, name: e.target.value})} required />
+                                        </div>
+                                        <div className="space-y-4">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-white/20 ml-2">Mastery %: {skillForm.level}</label>
+                                            <input type="range" className="w-full accent-accent" min="0" max="100" value={skillForm.level} onChange={e => setSkillForm({...skillForm, level: e.target.value})} />
+                                        </div>
+                                        <button type="submit" className="py-5 bg-white text-background font-black uppercase tracking-[0.5em] rounded-2xl hover:bg-accent hover:text-white transition-all text-[10px] shadow-glow-orange-lg">SPLICE SEQUENCE</button>
+                                    </form>
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                                    {skills.map(s => (
+                                        <div key={s.id} className="glass-premium p-6 rounded-3xl border-white/5 flex flex-col gap-4 relative group hover:scale-[1.02] transition-all">
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-accent">{s.name}</span>
+                                                <button onClick={async () => { if(window.confirm('Delete gene?')) { await deleteSkill(s.id); fetchData(); } }} className="p-2 text-white/10 hover:text-red-500 transition-colors"><Trash2 size={12} /></button>
+                                            </div>
+                                            <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                                                <div className="h-full bg-accent shadow-glow-orange transition-all duration-1000" style={{ width: `${s.level}%` }}></div>
+                                            </div>
+                                            <span className="text-[9px] font-bold text-white/20 uppercase tracking-widest self-end">{s.level}% Mastered</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* TAB CONTENT: ABOUT (PERSONA) */}
                         {activeTab === 'about' && (
                              <div className="space-y-16">
                                 <div className="glass-premium p-10 flex flex-col lg:flex-row items-center gap-12 rounded-[3.5rem] border-white/5 shadow-2xl">
@@ -243,9 +272,78 @@ const AdminDashboard = () => {
                                         </form>
                                     </div>
                                 </div>
+
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                                    {/* Persona Narrative */}
+                                    <div className="glass-premium p-10 rounded-[3rem] border-white/5 shadow-2xl space-y-8">
+                                        <h4 className="text-xl font-black uppercase tracking-widest text-white/40 flex items-center gap-4"><Briefcase size={20} className="text-accent" /> Narrative Data</h4>
+                                        <form onSubmit={handleAboutUpdate} className="space-y-6">
+                                            <textarea className="w-full bg-white/5 border border-white/10 p-8 rounded-3xl min-h-[250px] outline-none focus:border-accent text-white font-bold italic leading-relaxed" value={about.description} onChange={e => setAbout({...about, description: e.target.value})} placeholder="ENTERING NARRATIVE..."></textarea>
+                                            <button type="submit" className="w-full py-5 bg-accent text-white font-black uppercase tracking-widest rounded-2xl hover:scale-[1.02] shadow-glow-orange transition-all text-xs">Sync Narrative</button>
+                                        </form>
+                                    </div>
+
+                                    {/* Connectivity Channels */}
+                                    <div className="glass-premium p-10 rounded-[3rem] border-white/5 shadow-2xl space-y-8">
+                                        <h4 className="text-xl font-black uppercase tracking-widest text-white/40 flex items-center gap-4"><Globe size={20} className="text-accent" /> Social Links</h4>
+                                        <form onSubmit={handleSocialsUpdate} className="space-y-6">
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-4 px-6 py-4 bg-white/5 rounded-2xl border border-white/5 focus-within:border-accent group transition-all">
+                                                    <Github size={18} className="text-white/20 group-focus-within:text-accent" />
+                                                    <input type="text" className="bg-transparent border-none outline-none flex-1 text-[11px] font-black tracking-widest uppercase" placeholder="GITHUB URL" value={socials.github} onChange={e => setSocials({...socials, github: e.target.value})} />
+                                                </div>
+                                                <div className="flex items-center gap-4 px-6 py-4 bg-white/5 rounded-2xl border border-white/5 focus-within:border-accent group transition-all">
+                                                    <Linkedin size={18} className="text-white/20 group-focus-within:text-accent" />
+                                                    <input type="text" className="bg-transparent border-none outline-none flex-1 text-[11px] font-black tracking-widest uppercase" placeholder="LINKEDIN URL" value={socials.linkedin} onChange={e => setSocials({...socials, linkedin: e.target.value})} />
+                                                </div>
+                                                <div className="flex items-center gap-4 px-6 py-4 bg-white/5 rounded-2xl border border-white/5 focus-within:border-accent group transition-all">
+                                                    <Twitter size={18} className="text-white/20 group-focus-within:text-accent" />
+                                                    <input type="text" className="bg-transparent border-none outline-none flex-1 text-[11px] font-black tracking-widest uppercase" placeholder="TWITTER URL" value={socials.twitter} onChange={e => setSocials({...socials, twitter: e.target.value})} />
+                                                </div>
+                                                <div className="flex items-center gap-4 px-6 py-4 bg-white/5 rounded-2xl border border-white/5 focus-within:border-accent group transition-all">
+                                                    <Mail size={18} className="text-white/20 group-focus-within:text-accent" />
+                                                    <input type="email" className="bg-transparent border-none outline-none flex-1 text-[11px] font-black tracking-widest uppercase" placeholder="CONTACT EMAIL" value={socials.email} onChange={e => setSocials({...socials, email: e.target.value})} />
+                                                </div>
+                                            </div>
+                                            <button type="submit" className="w-full py-5 bg-white text-background font-black uppercase tracking-widest rounded-2xl hover:bg-accent hover:text-white transition-all text-xs">Synchronize Channels</button>
+                                        </form>
+                                    </div>
+                                </div>
                              </div>
                         )}
+
+                        {/* TAB CONTENT: MESSAGES (INBOX) */}
+                        {activeTab === 'messages' && (
+                            <div className="space-y-12">
+                                <div className="grid grid-cols-1 gap-6">
+                                    {messages.length === 0 ? (
+                                        <div className="glass-premium p-20 rounded-[3rem] text-center space-y-6">
+                                            <Mail size={64} className="mx-auto text-white/5" />
+                                            <p className="text-xl font-black uppercase tracking-[0.5em] text-white/20 italic">No Intercepted Signals</p>
+                                        </div>
+                                    ) : (
+                                        messages.map(m => (
+                                            <div key={m.id} className="glass-premium p-10 rounded-[2.5rem] border-white/5 flex flex-col md:flex-row gap-10 hover:bg-accent/[0.03] transition-all relative overflow-hidden group">
+                                                <div className="flex flex-col gap-4 flex-1">
+                                                    <div className="flex flex-wrap items-center gap-4">
+                                                        <span className="px-5 py-2 bg-accent text-white font-black uppercase tracking-widest text-[9px] rounded-full">{m.subject}</span>
+                                                        <span className="text-[10px] font-bold text-white/30 italic uppercase tracking-widest">{new Date(m.created_at).toLocaleString()}</span>
+                                                    </div>
+                                                    <h4 className="text-2xl font-black uppercase tracking-tighter">{m.name}</h4>
+                                                    <p className="text-accent text-[11px] font-black uppercase tracking-widest mb-4">{m.email}</p>
+                                                    <p className="text-white/60 font-medium leading-relaxed bg-white/5 p-8 rounded-3xl italic">{m.message}</p>
+                                                </div>
+                                                <div className="flex md:flex-col justify-end gap-4">
+                                                    <button onClick={async () => { if(window.confirm('Delete signal?')) { await deleteMessage(m.id); fetchData(); } }} className="w-16 h-16 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-3xl flex items-center justify-center transition-all shadow-xl"><Trash2 size={24} /></button>
+                                                </div>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
+
                 )}
             </main>
         </div>
