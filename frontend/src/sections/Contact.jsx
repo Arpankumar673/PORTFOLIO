@@ -92,26 +92,26 @@ const Contact = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div className="group">
                     <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/10 mb-3 block">Full Name</label>
-                    <input name="user_name" type="text" className="w-full bg-white/5 border border-white/5 py-5 px-6 rounded-2xl focus:border-accent outline-none text-xl font-bold italic text-white transition-all shadow-xl" placeholder="John Doe" required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
+                    <input name="user_name" type="text" className="w-full bg-white/5 border border-white/5 py-5 px-6 rounded-2xl focus:border-accent outline-none text-xl font-bold italic text-white transition-all shadow-xl placeholder:text-sm md:placeholder:text-base" placeholder="John Doe" required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
                 </div>
                 <div className="group">
                     <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/10 mb-3 block">Email Address</label>
-                    <input name="user_email" type="email" className="w-full bg-white/5 border border-white/5 py-5 px-6 rounded-2xl focus:border-accent outline-none text-xl font-bold italic text-white transition-all shadow-xl" placeholder="example@email.com" required value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
+                    <input name="user_email" type="email" className="w-full bg-white/5 border border-white/5 py-5 px-6 rounded-2xl focus:border-accent outline-none text-xl font-bold italic text-white transition-all shadow-xl placeholder:text-sm md:placeholder:text-base" placeholder="example@email.com" required value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
                 </div>
             </div>
             
             <div className="group">
                 <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/10 mb-3 block">Subject</label>
-                <input name="subject" type="text" className="w-full bg-white/5 border border-white/5 py-5 px-6 rounded-2xl focus:border-accent outline-none text-xl font-bold italic text-white transition-all shadow-xl" placeholder="What is this about?" required value={formData.subject} onChange={(e) => setFormData({...formData, subject: e.target.value})} />
+                <input name="subject" type="text" className="w-full bg-white/5 border border-white/5 py-5 px-6 rounded-2xl focus:border-accent outline-none text-xl font-bold italic text-white transition-all shadow-xl placeholder:text-sm md:placeholder:text-base" placeholder="What is this about?" required value={formData.subject} onChange={(e) => setFormData({...formData, subject: e.target.value})} />
             </div>
 
             <div className="group">
                 <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/10 mb-3 block">Your Message</label>
-                <textarea name="message" rows="6" className="w-full bg-white/5 border border-white/5 py-6 px-8 rounded-[2rem] focus:border-accent outline-none text-xl font-bold italic text-white transition-all resize-none shadow-xl" placeholder="Write your message here..." required value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} />
+                <textarea name="message" rows="6" className="w-full bg-white/5 border border-white/5 py-6 px-8 rounded-[2rem] focus:border-accent outline-none text-xl font-bold italic text-white transition-all resize-none shadow-xl placeholder:text-sm md:placeholder:text-base" placeholder="Write your message here..." required value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} />
             </div>
             
             <div className="flex justify-center pt-6">
-                <button type="submit" disabled={loading} className="btn-orange w-full px-20 py-6 text-xl font-black uppercase tracking-[0.5em] shadow-glow-orange hover:shadow-glow-orange-lg transition-all duration-300 transform active:scale-95 leading-none">
+                <button type="submit" disabled={loading} className="btn-orange w-fit px-14 sm:px-20 py-6 text-xl font-black uppercase tracking-[0.5em] shadow-glow-orange hover:shadow-glow-orange-lg transition-all duration-300 transform active:scale-95 leading-none">
                     {loading ? 'TRANSMITTING...' : 'SEND MESSAGE'}
                 </button>
             </div>
