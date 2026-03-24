@@ -66,11 +66,11 @@ const About = ({ data, profileImage, role }) => {
                 {/* Narrative Side */}
                 <div ref={contentRef} className="flex flex-col items-center lg:items-start text-center lg:text-left order-1 lg:order-2">
                     <h2 className="text-[10px] md:text-sm font-black uppercase tracking-[0.6em] text-accent mb-8 flex items-center gap-4 italic">
-                       <User size={14} /> The Identity Dossier
+                       <User size={14} /> About Me
                     </h2>
 
                     <h3 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-10 tracking-tighter uppercase leading-[1.1] text-white">
-                        Mission <span className="italic text-accent-light underline underline-offset-8 decoration-4">Brief</span>
+                        About
                     </h3>
 
                     <p className="text-lg sm:text-xl lg:text-2xl text-white/60 mb-10 leading-relaxed font-bold italic max-w-xl">
@@ -91,7 +91,7 @@ const About = ({ data, profileImage, role }) => {
                     <div className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
                         <button 
                             onClick={handleHireMeClick}
-                            className="btn-orange px-14 py-6 text-xl shadow-glow-orange group leading-none"
+                            className="btn-orange w-fit mx-auto lg:mx-0 px-14 py-6 text-xl shadow-glow-orange group leading-none"
                         >
                             Hire Me <Briefcase className="ml-4 group-hover:translate-y-[-2px] transition-transform" />
                         </button>
