@@ -100,9 +100,9 @@ const About = ({ data, profileImage, role }) => {
                                 href={data.resume_url} 
                                 target="_blank" 
                                 rel="noreferrer" 
-                                className="flex items-center justify-center gap-4 px-10 py-6 bg-white/5 border border-white/10 text-white font-black uppercase tracking-widest rounded-full hover:bg-white/10 transition-all text-xs"
+                                className="w-fit mx-auto lg:mx-0 flex items-center justify-center gap-4 px-14 py-6 bg-white/5 border border-white/10 text-white font-black uppercase tracking-tighter italic rounded-full hover:bg-white/10 transition-all text-xl shadow-xl leading-none"
                              >
-                                Get Resume <Download size={18} />
+                                Download CV <Download size={22} className="text-accent"/>
                              </a>
                         )}
                     </div>

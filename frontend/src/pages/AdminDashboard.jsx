@@ -29,6 +29,9 @@ const Twitter = Icons.Twitter || Icons.TwitterIcon || (() => null);
 const Github = Icons.Github || Icons.GithubIcon || (() => null);
 const Linkedin = Icons.Linkedin || Icons.LinkedinIcon || (() => null);
 const Menu = Icons.Menu || Icons.MenuIcon || (() => null);
+const FileText = Icons.FileText || Icons.FileTextIcon || (() => null);
+const Download = Icons.Download || Icons.DownloadIcon || (() => null);
+const ExternalLink = Icons.ExternalLink || Icons.ExternalLinkIcon || (() => null);
 const X = Icons.X || Icons.XIcon || (() => null);
 
 const AdminDashboard = () => {
@@ -125,6 +128,30 @@ const AdminDashboard = () => {
     const handleAboutUpdate = async (e) => {
         e.preventDefault();
         try { await updateAbout(about); alert("Bio Updated."); fetchData(); } catch (err) { alert(err.message); }
+    };
+
+    const handleResumeUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.type !== 'application/pdf') return alert("Only PDF files are authorized.");
+        if (file.size > 2 * 1024 * 1024) return alert("File exceeds 2MB threshold.");
+        
+        try {
+            setLoading(true);
+            await uploadResume(file);
+            alert("Resume Uploaded.");
+            fetchData();
+        } catch (err) { alert(err.message); }
+        finally { setLoading(false); }
+    };
+
+    const handleResumeDelete = async () => {
+        if (!window.confirm("Purge resume data?")) return;
+        try {
+            await updateAbout({ ...about, resume_url: null });
+            alert("Resume Purged.");
+            fetchData();
+        } catch (err) { alert(err.message); }
     };
 
     const handleLogout = async () => { await logoutUser(); navigate('/'); };
@@ -352,6 +379,28 @@ const AdminDashboard = () => {
                                             </div>
                                             <button type="submit" className="w-full py-5 bg-white text-background font-black uppercase tracking-widest rounded-2xl hover:bg-accent hover:text-white transition-all text-xs">Synchronize Channels</button>
                                         </form>
+                                    </div>
+
+                                    {/* Resume Management */}
+                                    <div className="glass-premium p-10 rounded-[3rem] border-white/5 shadow-2xl space-y-8 col-span-full">
+                                        <h4 className="text-xl font-black uppercase tracking-widest text-white/40 flex items-center gap-4"><FileText size={20} className="text-accent" /> Resume Meta-Data</h4>
+                                        <div className="flex flex-col md:flex-row items-center gap-10">
+                                            <label className="flex-1 w-full py-10 border-2 border-dashed border-white/10 rounded-3xl flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-accent hover:bg-accent/5 transition-all group">
+                                                <Download size={32} className="text-white/20 group-hover:text-accent transition-colors" />
+                                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 group-hover:text-white">Upload PDF Binary</span>
+                                                <input type="file" className="hidden" accept=".pdf" onChange={handleResumeUpload} />
+                                            </label>
+                                            {about.resume_url && (
+                                                <div className="flex flex-col gap-4 w-full md:w-auto">
+                                                    <a href={about.resume_url} target="_blank" rel="noreferrer" className="px-8 py-5 bg-accent text-white rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 shadow-glow-orange hover:scale-105 transition-all text-center">
+                                                        Preview <ExternalLink size={14} />
+                                                    </a>
+                                                    <button onClick={handleResumeDelete} className="px-8 py-5 bg-red-500/10 text-red-500 border border-red-500/20 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-red-500 hover:text-white transition-all">
+                                                        Purge File
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                              </div>
