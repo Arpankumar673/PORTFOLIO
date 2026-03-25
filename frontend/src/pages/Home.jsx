@@ -14,11 +14,11 @@ import Skills from '../sections/Skills';
 import { getProjects, getSkills, getServices, getAbout, getProfileData, getSocialLinks, getExperience, getCertificates } from '../lib/services';
 
 const Home = () => {
-  const [data, setData] = useState({ 
-    projects: [], 
-    skills: [], 
-    services: [], 
-    about: null, 
+  const [data, setData] = useState({
+    projects: [],
+    skills: [],
+    services: [],
+    about: null,
     profile: { image_url: '', role: '' },
     socials: { twitter: '#', github: '#', linkedin: '#', email: '#' },
     experience: [],
@@ -29,9 +29,9 @@ const Home = () => {
   useEffect(() => {
     // Smooth Scroll Initialization
     const lenis = new Lenis({
-        duration: 2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
+      duration: 2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
     });
 
     function raf(time) {
@@ -52,16 +52,16 @@ const Home = () => {
           getExperience(),
           getCertificates()
         ]);
-        
-        setData({ 
-            projects: proj, 
-            skills: skl, 
-            services: serv, 
-            about: abt, 
-            profile: prof,
-            socials: soc,
-            experience: exp,
-            certificates: cert
+
+        setData({
+          projects: proj,
+          skills: skl,
+          services: serv,
+          about: abt,
+          profile: prof,
+          socials: soc,
+          experience: exp,
+          certificates: cert
         });
       } catch (err) {
         console.error("Fetch Error: ", err);
@@ -77,26 +77,26 @@ const Home = () => {
   if (loading) return <Loading />;
 
   return (
-    <main className="bg-background text-white">
+    <main className="bg-background text-white overflow-x-hidden max-w-full relative">
       <Navbar />
-      <Hero 
-        data={data.about} 
-        profileImage={data.profile.image_url} 
-        role={data.profile.role} 
+      <Hero
+        data={data.about}
+        profileImage={data.profile.image_url}
+        role={data.profile.role}
         socials={data.socials}
       />
-      <About 
-        data={data.about} 
-        profileImage={data.profile.image_url} 
-        role={data.profile.role} 
+      <About
+        data={data.about}
+        profileImage={data.profile.image_url}
+        role={data.profile.role}
       />
       <div className="bg-[#080808]">
-         <Services services={data.services} />
-         <Skills skills={data.skills} />
-         <Experience experience={data.experience} />
-         <Certificates certificates={data.certificates} />
-         <Projects projects={data.projects} />
-         <Contact />
+        <Services services={data.services} />
+        <Skills skills={data.skills} />
+        <Experience experience={data.experience} />
+        <Certificates certificates={data.certificates} />
+        <Projects projects={data.projects} />
+        <Contact />
       </div>
       <Footer socials={data.socials} />
     </main>

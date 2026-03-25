@@ -15,14 +15,14 @@ const Experience = ({ experience }) => {
         if (!experience || experience.length === 0) return;
 
         const cards = sectionRef.current.querySelectorAll('.experience-card');
-        
+
         cards.forEach((card, i) => {
-            gsap.fromTo(card, 
+            gsap.fromTo(card,
                 { opacity: 0, x: i % 2 === 0 ? -50 : 50 },
-                { 
-                    opacity: 1, 
-                    x: 0, 
-                    duration: 1, 
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 1,
                     ease: 'power3.out',
                     scrollTrigger: {
                         trigger: card,
@@ -34,9 +34,9 @@ const Experience = ({ experience }) => {
 
         gsap.fromTo(lineRef.current,
             { height: 0 },
-            { 
-                height: '100%', 
-                duration: 2, 
+            {
+                height: '100%',
+                duration: 2,
                 ease: 'none',
                 scrollTrigger: {
                     trigger: sectionRef.current,
@@ -55,7 +55,7 @@ const Experience = ({ experience }) => {
             <div className="container mx-auto">
                 <div className="flex flex-col items-center mb-20 text-center">
                     <h2 className="text-[10px] md:text-sm font-black uppercase tracking-[0.6em] text-accent mb-6 flex items-center gap-4 italic justify-center">
-                       <Briefcase size={14} /> Career Chronicle
+                        <Briefcase size={14} /> Career Chronicle
                     </h2>
                     <h3 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase text-white leading-[1.1]">
                         Professional Journey
